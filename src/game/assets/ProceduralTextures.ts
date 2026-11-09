@@ -314,6 +314,115 @@ export function generateProceduralTextures(scene: Phaser.Scene) {
     );
   }
 
+  // --- NEW ZONE TILES: SUMMIT, DESERT, ORCHARD ---
+  if (!textures.exists('tile_summit_rock')) {
+    textures.addCanvas(
+      'tile_summit_rock',
+      createPixelCanvas(32, 32, (ctx) => {
+        ctx.fillStyle = '#64748b'; // slate alpine rock
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(0, 16, 32, 2);
+        ctx.fillRect(14, 0, 2, 16);
+        ctx.fillRect(22, 18, 2, 14);
+        // Frost/snow crust
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(4, 4, 8, 3);
+        ctx.fillRect(18, 8, 10, 3);
+        ctx.fillRect(10, 22, 6, 2);
+      })
+    );
+  }
+
+  if (!textures.exists('tile_summit_snow')) {
+    textures.addCanvas(
+      'tile_summit_snow',
+      createPixelCanvas(32, 32, (ctx) => {
+        ctx.fillStyle = '#f1f5f9'; // soft white snow
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#e2e8f0';
+        ctx.fillRect(6, 8, 4, 2);
+        ctx.fillRect(20, 16, 5, 2);
+        // Sparkling ice crystal
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(12, 14, 1, 1);
+        ctx.fillRect(24, 6, 1, 1);
+      })
+    );
+  }
+
+  if (!textures.exists('tile_desert_sand')) {
+    textures.addCanvas(
+      'tile_desert_sand',
+      createPixelCanvas(32, 32, (ctx) => {
+        ctx.fillStyle = '#f59e0b'; // golden desert sand
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#d97706';
+        ctx.fillRect(0, 12, 32, 2);
+        ctx.fillRect(0, 26, 32, 2);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(8, 6, 4, 2);
+        ctx.fillRect(22, 18, 6, 2);
+      })
+    );
+  }
+
+  if (!textures.exists('tile_desert_dune')) {
+    textures.addCanvas(
+      'tile_desert_dune',
+      createPixelCanvas(32, 32, (ctx) => {
+        ctx.fillStyle = '#d97706';
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.moveTo(0, 10);
+        ctx.quadraticCurveTo(16, 24, 32, 10);
+        ctx.lineTo(32, 32);
+        ctx.lineTo(0, 32);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#fde68a';
+        ctx.fillRect(4, 8, 12, 2);
+        ctx.fillRect(18, 6, 10, 2);
+      })
+    );
+  }
+
+  if (!textures.exists('tile_orchard_grass')) {
+    textures.addCanvas(
+      'tile_orchard_grass',
+      createPixelCanvas(32, 32, (ctx) => {
+        ctx.fillStyle = '#4ade80'; // vibrant clover orchard green
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(6, 6, 3, 3);
+        ctx.fillRect(22, 18, 3, 3);
+        // Clover flowers
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(12, 14, 2, 2);
+        ctx.fillRect(26, 8, 2, 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(13, 13, 1, 1);
+        ctx.fillRect(27, 7, 1, 1);
+      })
+    );
+  }
+
+  if (!textures.exists('tile_orchard_path')) {
+    textures.addCanvas(
+      'tile_orchard_path',
+      createPixelCanvas(32, 32, (ctx) => {
+        ctx.fillStyle = '#d4a373'; // wooden mulch path
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#bc6c25';
+        ctx.fillRect(0, 8, 32, 2);
+        ctx.fillRect(0, 22, 32, 2);
+        ctx.fillRect(10, 0, 2, 8);
+        ctx.fillRect(24, 10, 2, 12);
+      })
+    );
+  }
+
   // --- 2. LARGE OBJECTS (Trees, Boulders, Shipping Bin, Buildings) ---
   if (!textures.exists('obj_tree')) {
     textures.addCanvas(
@@ -683,6 +792,333 @@ export function generateProceduralTextures(scene: Phaser.Scene) {
     );
   }
 
+  // --- NEW BUILDINGS & WORLD ASSETS ---
+  if (!textures.exists('obj_observatory')) {
+    textures.addCanvas(
+      'obj_observatory',
+      createPixelCanvas(96, 80, (ctx) => {
+        // Stone cylindrical base
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(16, 36, 64, 42);
+        ctx.fillStyle = '#64748b';
+        ctx.fillRect(18, 38, 60, 4);
+        ctx.fillRect(18, 54, 60, 3);
+        // Observatory dome (midnight blue & brass)
+        ctx.fillStyle = '#1e293b';
+        ctx.beginPath();
+        ctx.arc(48, 36, 30, Math.PI, 0);
+        ctx.fill();
+        ctx.fillStyle = '#3b82f6';
+        ctx.beginPath();
+        ctx.arc(48, 36, 26, Math.PI, 0);
+        ctx.fill();
+        // Dome slit & brass telescope
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(44, 10, 8, 26);
+        ctx.fillStyle = '#f59e0b'; // brass telescope barrel
+        ctx.save();
+        ctx.translate(48, 22);
+        ctx.rotate(-0.4);
+        ctx.fillRect(-4, -14, 8, 24);
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(-6, -16, 12, 4); // lens aperture
+        ctx.restore();
+        // Archway entrance
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(40, 54, 16, 24);
+      })
+    );
+  }
+
+  if (!textures.exists('obj_wind_shrine')) {
+    textures.addCanvas(
+      'obj_wind_shrine',
+      createPixelCanvas(48, 48, (ctx) => {
+        ctx.fillStyle = '#64748b';
+        ctx.fillRect(8, 32, 32, 12);
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(12, 16, 24, 16);
+        // Cloud wind carving
+        ctx.fillStyle = '#e2e8f0';
+        ctx.beginPath();
+        ctx.arc(24, 24, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(20, 23, 8, 2);
+        // Mountain crest ornament
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.moveTo(14, 16);
+        ctx.lineTo(24, 6);
+        ctx.lineTo(34, 16);
+        ctx.closePath();
+        ctx.fill();
+      })
+    );
+  }
+
+  if (!textures.exists('obj_desert_shrine')) {
+    textures.addCanvas(
+      'obj_desert_shrine',
+      createPixelCanvas(64, 80, (ctx) => {
+        // Sandstone pedestal
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(8, 62, 48, 16);
+        ctx.fillStyle = '#d97706';
+        ctx.fillRect(12, 60, 40, 4);
+        // Obelisk pillar
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.moveTo(22, 60);
+        ctx.lineTo(26, 16);
+        ctx.lineTo(38, 16);
+        ctx.lineTo(42, 60);
+        ctx.closePath();
+        ctx.fill();
+        // Obelisk pyramidion tip
+        ctx.fillStyle = '#fde047';
+        ctx.beginPath();
+        ctx.moveTo(26, 16);
+        ctx.lineTo(32, 4);
+        ctx.lineTo(38, 16);
+        ctx.closePath();
+        ctx.fill();
+        // Carved Sun glyph
+        ctx.fillStyle = '#78350f';
+        ctx.beginPath();
+        ctx.arc(32, 34, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillRect(30, 26, 4, 3);
+        ctx.fillRect(30, 39, 4, 3);
+      })
+    );
+  }
+
+  if (!textures.exists('obj_cactus')) {
+    textures.addCanvas(
+      'obj_cactus',
+      createPixelCanvas(32, 48, (ctx) => {
+        ctx.fillStyle = '#15803d'; // dark green stem
+        ctx.fillRect(12, 10, 8, 36);
+        // Left arm
+        ctx.fillRect(4, 20, 8, 6);
+        ctx.fillRect(4, 14, 6, 8);
+        // Right arm
+        ctx.fillRect(20, 24, 8, 6);
+        ctx.fillRect(22, 18, 6, 8);
+        // Spines
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(10, 16, 2, 2);
+        ctx.fillRect(20, 28, 2, 2);
+        // Top Flower
+        ctx.fillStyle = '#f43f5e';
+        ctx.fillRect(13, 6, 6, 4);
+      })
+    );
+  }
+
+  if (!textures.exists('obj_palm_tree')) {
+    textures.addCanvas(
+      'obj_palm_tree',
+      createPixelCanvas(48, 64, (ctx) => {
+        // Curved trunk
+        ctx.fillStyle = '#92400e';
+        ctx.beginPath();
+        ctx.moveTo(20, 62);
+        ctx.quadraticCurveTo(28, 40, 24, 18);
+        ctx.lineTo(28, 18);
+        ctx.quadraticCurveTo(32, 40, 26, 62);
+        ctx.closePath();
+        ctx.fill();
+        // Fronds (large green palm leaves)
+        ctx.fillStyle = '#16a34a';
+        ctx.beginPath();
+        ctx.ellipse(14, 16, 14, 5, -0.4, 0, Math.PI * 2);
+        ctx.ellipse(36, 16, 14, 5, 0.4, 0, Math.PI * 2);
+        ctx.ellipse(26, 8, 6, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Coconuts/Dates
+        ctx.fillStyle = '#78350f';
+        ctx.beginPath();
+        ctx.arc(22, 20, 3, 0, Math.PI * 2);
+        ctx.arc(28, 20, 3, 0, Math.PI * 2);
+        ctx.fill();
+      })
+    );
+  }
+
+  if (!textures.exists('obj_windmill')) {
+    textures.addCanvas(
+      'obj_windmill',
+      createPixelCanvas(96, 96, (ctx) => {
+        // Stone tower base
+        ctx.fillStyle = '#78716c';
+        ctx.beginPath();
+        ctx.moveTo(28, 92);
+        ctx.lineTo(34, 40);
+        ctx.lineTo(62, 40);
+        ctx.lineTo(68, 92);
+        ctx.closePath();
+        ctx.fill();
+        // Timber cap roof
+        ctx.fillStyle = '#92400e';
+        ctx.beginPath();
+        ctx.moveTo(28, 40);
+        ctx.lineTo(48, 22);
+        ctx.lineTo(68, 40);
+        ctx.closePath();
+        ctx.fill();
+        // Door
+        ctx.fillStyle = '#451a03';
+        ctx.fillRect(42, 70, 12, 22);
+        // Windmill Rotor Hub
+        ctx.fillStyle = '#1c1917';
+        ctx.beginPath();
+        ctx.arc(48, 38, 5, 0, Math.PI * 2);
+        ctx.fill();
+        // 4 Sails (timber cross with canvas)
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(46, 6, 4, 64);
+        ctx.fillRect(16, 36, 64, 4);
+        // Canvas sails
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(50, 8, 12, 26);
+        ctx.fillRect(50, 40, 26, 12);
+        ctx.fillRect(34, 62, 12, 26);
+        ctx.fillRect(20, 24, 26, 12);
+      })
+    );
+  }
+
+  if (!textures.exists('obj_beehive')) {
+    textures.addCanvas(
+      'obj_beehive',
+      createPixelCanvas(32, 32, (ctx) => {
+        ctx.fillStyle = '#78350f'; // wood stand legs
+        ctx.fillRect(8, 24, 3, 6);
+        ctx.fillRect(21, 24, 3, 6);
+        // Bee box body
+        ctx.fillStyle = '#d97706';
+        ctx.fillRect(6, 8, 20, 16);
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(6, 14, 20, 2);
+        // Slit entrance
+        ctx.fillStyle = '#1c1917';
+        ctx.fillRect(11, 20, 10, 2);
+        // Roof
+        ctx.fillStyle = '#92400e';
+        ctx.fillRect(4, 6, 24, 3);
+        // Little flying bee speck
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(24, 6, 2, 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(25, 7, 1, 1);
+      })
+    );
+  }
+
+  if (!textures.exists('obj_fruit_tree_apple')) {
+    textures.addCanvas(
+      'obj_fruit_tree_apple',
+      createPixelCanvas(48, 64, (ctx) => {
+        // Trunk
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(20, 36, 8, 26);
+        // Fluffy canopy
+        ctx.fillStyle = '#15803d';
+        ctx.beginPath();
+        ctx.arc(24, 24, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.arc(21, 20, 14, 0, Math.PI * 2);
+        ctx.fill();
+        // Red apples
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(16, 18, 3, 0, Math.PI * 2);
+        ctx.arc(28, 14, 3, 0, Math.PI * 2);
+        ctx.arc(32, 24, 3, 0, Math.PI * 2);
+        ctx.arc(20, 28, 3, 0, Math.PI * 2);
+        ctx.fill();
+      })
+    );
+  }
+
+  if (!textures.exists('obj_fruit_tree_peach')) {
+    textures.addCanvas(
+      'obj_fruit_tree_peach',
+      createPixelCanvas(48, 64, (ctx) => {
+        // Trunk
+        ctx.fillStyle = '#78350f';
+        ctx.fillRect(20, 36, 8, 26);
+        // Fluffy canopy
+        ctx.fillStyle = '#16a34a';
+        ctx.beginPath();
+        ctx.arc(24, 24, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#4ade80';
+        ctx.beginPath();
+        ctx.arc(21, 20, 14, 0, Math.PI * 2);
+        ctx.fill();
+        // Peaches (pink/peach)
+        ctx.fillStyle = '#fb7185';
+        ctx.beginPath();
+        ctx.arc(16, 18, 3, 0, Math.PI * 2);
+        ctx.arc(28, 14, 3, 0, Math.PI * 2);
+        ctx.arc(32, 24, 3, 0, Math.PI * 2);
+        ctx.arc(20, 28, 3, 0, Math.PI * 2);
+        ctx.fill();
+      })
+    );
+  }
+
+  if (!textures.exists('obj_blacksmith_forge')) {
+    textures.addCanvas(
+      'obj_blacksmith_forge',
+      createPixelCanvas(80, 64, (ctx) => {
+        // Stone hearth
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(8, 20, 40, 40);
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(14, 30, 28, 22);
+        // Glowing hot coals
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(16, 40, 24, 10);
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(20, 42, 16, 6);
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(24, 44, 8, 3);
+        // Heavy steel anvil beside forge
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(54, 42, 18, 18);
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(50, 38, 26, 6);
+      })
+    );
+  }
+
+  if (!textures.exists('obj_hotspring_gate')) {
+    textures.addCanvas(
+      'obj_hotspring_gate',
+      createPixelCanvas(48, 48, (ctx) => {
+        // Torii arch posts
+        ctx.fillStyle = '#b91c1c';
+        ctx.fillRect(6, 8, 5, 40);
+        ctx.fillRect(37, 8, 5, 40);
+        // Crossbeams
+        ctx.fillRect(2, 6, 44, 5);
+        ctx.fillRect(4, 14, 40, 4);
+        // Hanging paper lantern
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(21, 18, 6, 8);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(22, 17, 4, 1);
+        ctx.fillRect(22, 26, 4, 1);
+      })
+    );
+  }
+
   // --- 3. PLAYER SPRITESHEET (16x24 per frame, 4 directions x 4 walk frames) ---
   if (!textures.exists('player_sheet')) {
     const pCanvas = createPixelCanvas(64, 96, (ctx) => {
@@ -748,7 +1184,7 @@ export function generateProceduralTextures(scene: Phaser.Scene) {
     });
   }
 
-  // --- 4. NPC SPRITESHEETS (7 Villagers) ---
+  // --- 4. NPC SPRITESHEETS (12 Villagers) ---
   const npcs = [
     { key: 'npc_milo', shirt: '#4d7c0f', hair: '#78350f', skin: '#fcd34d' },
     { key: 'npc_luna', shirt: '#c084fc', hair: '#6b21a8', skin: '#fed7aa' },
@@ -757,6 +1193,11 @@ export function generateProceduralTextures(scene: Phaser.Scene) {
     { key: 'npc_theo', shirt: '#34d399', hair: '#1e293b', skin: '#fcd34d' },
     { key: 'npc_maple', shirt: '#f43f5e', hair: '#881337', skin: '#fed7aa' },
     { key: 'npc_nori', shirt: '#818cf8', hair: '#312e81', skin: '#fef08a' },
+    { key: 'npc_kai', shirt: '#0ea5e9', hair: '#0f172a', skin: '#fed7aa' },
+    { key: 'npc_selene', shirt: '#f59e0b', hair: '#451a03', skin: '#fcd34d' },
+    { key: 'npc_cedric', shirt: '#65a30d', hair: '#713f12', skin: '#fef08a' },
+    { key: 'npc_ember', shirt: '#b91c1c', hair: '#172554', skin: '#fcd34d' },
+    { key: 'npc_aiden', shirt: '#0891b2', hair: '#fef08a', skin: '#fed7aa' },
   ];
 
   npcs.forEach((npc) => {
@@ -911,6 +1352,9 @@ export function generateProceduralTextures(scene: Phaser.Scene) {
     { key: 'pumpkin', color: '#ea580c', leaf: '#166534' },
     { key: 'sunflower', color: '#eab308', leaf: '#84cc16' },
     { key: 'bluerose', color: '#3b82f6', leaf: '#059669' },
+    { key: 'melon', color: '#10b981', leaf: '#047857' },
+    { key: 'corn', color: '#fbbf24', leaf: '#15803d' },
+    { key: 'eggplant', color: '#8b5cf6', leaf: '#15803d' },
   ];
 
   crops.forEach((crop) => {
@@ -1249,6 +1693,110 @@ export function generateProceduralTextures(scene: Phaser.Scene) {
       ctx.fillRect(9, 13, 6, 7);
       ctx.fillStyle = '#38bdf8';
       ctx.fillRect(7, 9, 10, 4);
+    },
+    item_crop_apple: (ctx) => {
+      ctx.fillStyle = '#15803d';
+      ctx.fillRect(11, 4, 3, 3);
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(12, 13, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fca5a5';
+      ctx.fillRect(10, 9, 2, 2);
+    },
+    item_crop_peach: (ctx) => {
+      ctx.fillStyle = '#15803d';
+      ctx.fillRect(11, 4, 3, 3);
+      ctx.fillStyle = '#fb7185';
+      ctx.beginPath();
+      ctx.arc(12, 13, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fbcfe8';
+      ctx.fillRect(10, 9, 2, 2);
+    },
+    item_honey: (ctx) => {
+      ctx.fillStyle = '#b45309';
+      ctx.fillRect(7, 5, 10, 3); // lid
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(6, 8, 12, 12); // jar
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(8, 10, 8, 8); // glowing honey
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(10, 13, 4, 2); // comb symbol
+    },
+    item_cider: (ctx) => {
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(10, 4, 4, 3); // cork
+      ctx.fillStyle = '#166534';
+      ctx.fillRect(9, 7, 6, 5); // bottle neck
+      ctx.fillStyle = '#15803d';
+      ctx.fillRect(7, 12, 10, 9); // body
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(8, 14, 8, 5); // label
+    },
+    item_honey_tea: (ctx) => {
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(6, 8, 12, 10); // cup
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(18, 10, 3, 6); // handle
+      ctx.fillStyle = '#d97706';
+      ctx.fillRect(7, 7, 10, 3); // steeped tea
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(9, 4, 2, 2); // steam
+    },
+    item_glazed_salmon: (ctx) => {
+      ctx.fillStyle = '#f43f5e';
+      ctx.fillRect(5, 10, 14, 6);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(7, 9, 10, 2); // golden honey glaze
+      ctx.fillStyle = '#15803d';
+      ctx.fillRect(9, 11, 2, 1);
+      ctx.fillRect(13, 11, 2, 1);
+    },
+    item_peach_tart: (ctx) => {
+      ctx.fillStyle = '#b45309';
+      ctx.fillRect(5, 13, 14, 5);
+      ctx.fillStyle = '#fb7185';
+      ctx.beginPath();
+      ctx.arc(12, 11, 5, 0, Math.PI);
+      ctx.fill();
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(11, 9, 2, 2);
+    },
+    item_gem_amulet: (ctx) => {
+      ctx.fillStyle = '#d97706';
+      ctx.beginPath();
+      ctx.arc(12, 8, 5, 0, Math.PI); // chain
+      ctx.stroke();
+      ctx.fillStyle = '#a855f7';
+      ctx.beginPath();
+      ctx.moveTo(12, 10);
+      ctx.lineTo(16, 15);
+      ctx.lineTo(12, 20);
+      ctx.lineTo(8, 15);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#f3e8ff';
+      ctx.fillRect(11, 13, 2, 3);
+    },
+    item_relic_tablet: (ctx) => {
+      ctx.fillStyle = '#d97706';
+      ctx.fillRect(6, 6, 12, 14);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(8, 8, 8, 10);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(10, 10, 4, 2);
+      ctx.fillRect(9, 13, 6, 2);
+    },
+    item_edelweiss: (ctx) => {
+      ctx.fillStyle = '#15803d';
+      ctx.fillRect(11, 12, 2, 8);
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(12, 9, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(11, 8, 2, 2);
     },
     item_furn_campfire: (ctx) => {
       ctx.fillStyle = '#78350f';

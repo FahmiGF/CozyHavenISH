@@ -7,7 +7,18 @@ import { FarmAnimal } from './animals';
 
 export type WeatherType = 'sunny' | 'rainy' | 'cloudy' | 'foggy';
 
-export type MapId = 'farm' | 'village' | 'house' | 'beach' | 'forest' | 'mine';
+export type MapId =
+  | 'farm'
+  | 'village'
+  | 'house'
+  | 'beach'
+  | 'forest'
+  | 'mine'
+  | 'summit'
+  | 'desert'
+  | 'orchard';
+
+export type GameViewMode = '2d' | '3d-iso' | '3d-topdown';
 
 export interface TutorialStage {
   id: number;

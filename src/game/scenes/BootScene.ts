@@ -48,8 +48,21 @@ export class BootScene extends Phaser.Scene {
     anims.create({ key: 'player_idle_right', frames: [{ key: 'player_sheet', frame: 8 }], frameRate: 1 });
     anims.create({ key: 'player_idle_up', frames: [{ key: 'player_sheet', frame: 12 }], frameRate: 1 });
 
-    // 2. Create NPC Animations
-    ['npc_milo', 'npc_luna', 'npc_oliver', 'npc_poppy', 'npc_theo', 'npc_maple', 'npc_nori'].forEach((npcKey) => {
+    // 2. Create NPC Animations (12 Villagers)
+    [
+      'npc_milo',
+      'npc_luna',
+      'npc_oliver',
+      'npc_poppy',
+      'npc_theo',
+      'npc_maple',
+      'npc_nori',
+      'npc_kai',
+      'npc_selene',
+      'npc_cedric',
+      'npc_ember',
+      'npc_aiden',
+    ].forEach((npcKey) => {
       anims.create({
         key: `${npcKey}_idle_down`,
         frames: [{ key: npcKey, frame: 0 }],

@@ -21,7 +21,8 @@ import { SleepConfirmModal } from './ui/modals/SleepConfirmModal';
 import { ShippingReportModal } from './ui/modals/ShippingReportModal';
 import { CookingModal } from './ui/modals/CookingModal';
 import { MultiplayerModal } from './ui/modals/MultiplayerModal';
-import { DayEarningsReport } from './types/game';
+import { DayEarningsReport, GameViewMode } from './types/game';
+import { ThreeViewContainer } from './game/three/ThreeViewContainer';
 
 export const App: React.FC = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -29,6 +30,15 @@ export const App: React.FC = () => {
 
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [modalData, setModalData] = useState<any>(null);
+  const [viewMode, setViewMode] = useState<GameViewMode>('2d');
+
+  const toggleViewMode = () => {
+    setViewMode((prev) => {
+      if (prev === '2d') return '3d-iso';
+      if (prev === '3d-iso') return '3d-topdown';
+      return '2d';
+    });
+  };
 
   useEffect(() => {
     // 1. Initialize GameState domain
@@ -50,6 +60,10 @@ export const App: React.FC = () => {
       setModalData(null);
     });
 
+    const unsubToggleView = EventBus.on('TOGGLE_VIEW_MODE', () => {
+      toggleViewMode();
+    });
+
     // 4. Global keyboard shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'q' || e.key === 'Q') {
@@ -59,6 +73,8 @@ export const App: React.FC = () => {
         setActiveModal((prev) => (prev === 'quest' ? null : 'quest'));
       } else if (e.key === 'm' || e.key === 'M') {
         setActiveModal((prev) => (prev === 'map' ? null : 'map'));
+      } else if (e.key === 'v' || e.key === 'V') {
+        toggleViewMode();
       } else if (e.key === 'Escape') {
         setActiveModal((prev) => (prev ? null : 'settings'));
       }
@@ -69,6 +85,7 @@ export const App: React.FC = () => {
     return () => {
       unsubOpen();
       unsubClose();
+      unsubToggleView();
       window.removeEventListener('keydown', handleKeyDown);
 
       // Clean up game instance on unmount to prevent double canvas
@@ -86,11 +103,25 @@ export const App: React.FC = () => {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden select-none bg-haven-950 font-cozy">
-      {/* Phaser Canvas Container */}
-      <div ref={gameContainerRef} className="absolute inset-0 z-0 w-full h-full" />
+      {/* 2D Phaser Canvas Container */}
+      <div
+        ref={gameContainerRef}
+        className={`absolute inset-0 z-0 w-full h-full transition-opacity duration-300 ${
+          viewMode === '2d' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      />
+
+      {/* 3D Viewport (Isometric & Top-Down) */}
+      {viewMode !== '2d' && (
+        <ThreeViewContainer mode={viewMode} onToggleView={toggleViewMode} />
+      )}
 
       {/* Top HUD (Clock, Coins, Energy, Navigation) */}
-      <HUD onOpenModal={(modal) => setActiveModal(modal)} />
+      <HUD
+        onOpenModal={(modal) => setActiveModal(modal)}
+        viewMode={viewMode}
+        onToggleViewMode={toggleViewMode}
+      />
 
       {/* Floating Interaction Prompt */}
       <InteractionPrompt />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { EventBus } from '../domain/EventBus';
 import { gameState, TUTORIAL_STAGES } from '../domain/GameState';
 import { mpClient } from '../network/MultiplayerClient';
-import { GameTime, WeatherType, TutorialProgress } from '../types/game';
+import { GameTime, WeatherType, TutorialProgress, GameViewMode } from '../types/game';
 import {
   Coins,
   Sun,
@@ -24,6 +24,9 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  Box,
+  Eye,
+  Layers,
 } from 'lucide-react';
 
 interface NotificationToast {
@@ -35,9 +38,11 @@ interface NotificationToast {
 
 interface HUDProps {
   onOpenModal: (modal: string) => void;
+  viewMode?: GameViewMode;
+  onToggleViewMode?: () => void;
 }
 
-export const HUD: React.FC<HUDProps> = ({ onOpenModal }) => {
+export const HUD: React.FC<HUDProps> = ({ onOpenModal, viewMode = '2d', onToggleViewMode }) => {
   const [time, setTime] = useState<GameTime>(gameState.data.time);
   const [weather, setWeather] = useState<WeatherType>(gameState.data.weather);
   const [coins, setCoins] = useState<number>(gameState.data.player.coins);
@@ -261,6 +266,36 @@ export const HUD: React.FC<HUDProps> = ({ onOpenModal }) => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-1.5 bg-haven-100/90 p-1.5 rounded-2xl border-2 border-haven-400 backdrop-blur-sm shadow-cozy">
+          {/* 2D / 3D Perspective Mode Switcher */}
+          {onToggleViewMode && (
+            <button
+              onClick={onToggleViewMode}
+              title={`Camera Mode: ${
+                viewMode === '2d'
+                  ? '2D Pixel Art'
+                  : viewMode === '3d-iso'
+                  ? '3D Isometric Low-Poly'
+                  : '3D Top-Down Ortho'
+              } [Press V]`}
+              className={`p-2 rounded-xl transition active:scale-95 flex items-center gap-1.5 font-black text-xs ${
+                viewMode !== '2d'
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md'
+                  : 'bg-haven-200 hover:bg-haven-300 text-haven-800'
+              }`}
+            >
+              {viewMode === '2d' ? (
+                <Eye className="w-5 h-5 text-haven-700" />
+              ) : viewMode === '3d-iso' ? (
+                <Box className="w-5 h-5 text-emerald-100 animate-pulse" />
+              ) : (
+                <Layers className="w-5 h-5 text-cyan-100 animate-pulse" />
+              )}
+              <span className="hidden md:inline font-mono text-[11px]">
+                {viewMode === '2d' ? '2D' : viewMode === '3d-iso' ? '3D ISO' : '3D TOP'}
+              </span>
+            </button>
+          )}
+
           <button
             onClick={() => onOpenModal('inventory')}
             title="Backpack [Q]"

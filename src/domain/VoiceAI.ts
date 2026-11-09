@@ -215,6 +215,146 @@ export const NPC_VOICE_PROFILES: Record<string, NPCVoiceProfile> = {
       ],
     },
   },
+  kai: {
+    npcId: 'kai',
+    name: 'Kai',
+    pitch: 1.05,
+    rate: 1.0,
+    volume: 1.0,
+    preferredGender: 'male',
+    voiceKeywords: ['male', 'alex', 'daniel', 'en-us', 'en-gb'],
+    formantTone: 180,
+    catchphrasePool: {
+      morning: [
+        'Crisp mountain air up here! The clouds are parting over the valley!',
+        'Rise and shine! The mountain sun strikes the peaks first!',
+      ],
+      afternoon: [
+        'Surveying the ridges! Keep an eye out for mountain goats and edelweiss!',
+        'The telescope lenses are crystal clear today!',
+      ],
+      evening: [
+        'Look to the west! The sunset paints the mountain ridges in pure gold!',
+        'Time to align the stargazing brass mirrors for tonight.',
+      ],
+      night: [
+        'The constellations are shining in full brilliance! Spot the Island Dragon!',
+        'Clear skies and quiet mountain winds. Rest well down in the valley!',
+      ],
+    },
+  },
+  selene: {
+    npcId: 'selene',
+    name: 'Selene',
+    pitch: 1.18,
+    rate: 0.88,
+    volume: 0.95,
+    preferredGender: 'female',
+    voiceKeywords: ['female', 'victoria', 'serena', 'natural', 'en'],
+    formantTone: 240,
+    catchphrasePool: {
+      morning: [
+        'The morning sun warms the ancient stones of the oasis...',
+        'Peace be upon your journey through these sacred sands.',
+      ],
+      afternoon: [
+        'The desert heat is intense, but the oasis palm shade provides sanctuary.',
+        'Every carved glyph tells a story from centuries ago...',
+      ],
+      evening: [
+        'The sands cool quickly as twilight bathes the obelisk in crimson.',
+        'Drink fragrant mint tea with me as the desert breeze arrives.',
+      ],
+      night: [
+        'Under the canopy of endless desert stars, time itself stands still.',
+        'May the ancient spirits watch over your dreams tonight.',
+      ],
+    },
+  },
+  cedric: {
+    npcId: 'cedric',
+    name: 'Cedric',
+    pitch: 0.78,
+    rate: 0.95,
+    volume: 1.0,
+    preferredGender: 'male',
+    voiceKeywords: ['male', 'george', 'oliver', 'en-gb', 'en-us'],
+    formantTone: 130,
+    catchphrasePool: {
+      morning: [
+        'Bzz-bzz! Top of the morning, neighbor! The bees are already buzzing happily!',
+        'Smell those fresh apple blossoms opening on the terraces!',
+      ],
+      afternoon: [
+        'Fresh cider pressing time! Come try a cup of sweet amber nectar!',
+        'A happy hive means sweet honey for the whole village!',
+      ],
+      evening: [
+        'The bees are safely tucked in their cedar comb boxes for the night.',
+        'Ah, nothing like a golden cider mug after a long day in the orchard.',
+      ],
+      night: [
+        'Sleep sweet as honeycomb, my friend! See you at dawn!',
+        'The orchard breeze is cool and fragrant tonight.',
+      ],
+    },
+  },
+  ember: {
+    npcId: 'ember',
+    name: 'Ember',
+    pitch: 1.25,
+    rate: 1.08,
+    volume: 1.0,
+    preferredGender: 'female',
+    voiceKeywords: ['female', 'samantha', 'karen', 'en-us'],
+    formantTone: 210,
+    catchphrasePool: {
+      morning: [
+        'Fire in the forge! Ready to hammer out masterwork iron and gold tools!',
+        'Clang-clang! Up and at it! Let\'s break some rocks today!',
+      ],
+      afternoon: [
+        'The forge is roaring hot! Perfect temperature to shape pure gold ore!',
+        'Found any rare amethyst geodes in the deep tunnels yet?',
+      ],
+      evening: [
+        'Quenching the steel in cold cavern spring water! That hiss is music to me!',
+        'Whew! Great haul of minerals today, partner!',
+      ],
+      night: [
+        'Dousing the forge coals... Don\'t wander into unlit mine shafts in the dark!',
+        'Rest up those muscles! We\'ve got veins to strike tomorrow!',
+      ],
+    },
+  },
+  aiden: {
+    npcId: 'aiden',
+    name: 'Aiden',
+    pitch: 1.12,
+    rate: 1.02,
+    volume: 1.0,
+    preferredGender: 'male',
+    voiceKeywords: ['male', 'daniel', 'alex', 'en-au', 'en-us'],
+    formantTone: 190,
+    catchphrasePool: {
+      morning: [
+        'Low tide reveals the most incredible anemones and starfish!',
+        'Good morning! The ocean current is bringing in clear water today!',
+      ],
+      afternoon: [
+        'Just finished diving the coral dropoff! The Rainbow Trout are migrating!',
+        'Salt spray and sea breeze—best combination in existence!',
+      ],
+      evening: [
+        'The tide is coming in with schools of glowing Moonlight Salmon!',
+        'Evening reflections on the waves are simply peerless.',
+      ],
+      night: [
+        'Phosphorescent plankton are lighting up the beach surf tonight!',
+        'Goodnight! May the gentle sound of the surf rock you to sleep.',
+      ],
+    },
+  },
 };
 
 export class VoiceAIEngine {

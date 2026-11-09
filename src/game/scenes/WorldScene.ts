@@ -7,6 +7,7 @@ import { FarmAnimal } from '../../types/animals';
 import { MapId, WeatherType } from '../../types/game';
 import { CROPS_DATABASE, PlantedCrop } from '../../types/crops';
 import { NPCS_DATABASE, NPCDefinition } from '../../types/npcs';
+import { ITEMS_DATABASE } from '../../types/items';
 import { GridPathfinder, Point } from '../ai/Pathfinder';
 
 interface ForageSpawn {
@@ -127,6 +128,15 @@ export class WorldScene extends Phaser.Scene {
       case 'mine':
         this.buildMineMap(worldWidth, worldHeight);
         break;
+      case 'summit':
+        this.buildSummitMap(worldWidth, worldHeight);
+        break;
+      case 'desert':
+        this.buildDesertMap(worldWidth, worldHeight);
+        break;
+      case 'orchard':
+        this.buildOrchardMap(worldWidth, worldHeight);
+        break;
       case 'farm':
       default:
         this.buildFarmMap(worldWidth, worldHeight);
@@ -210,6 +220,12 @@ export class WorldScene extends Phaser.Scene {
         return { x: 380, y: 560 };
       case 'mine':
         return { x: 400, y: 560 };
+      case 'summit':
+        return { x: 400, y: 550 };
+      case 'desert':
+        return { x: 100, y: 320 };
+      case 'orchard':
+        return { x: 400, y: 100 };
       case 'farm':
       default:
         return { x: 320, y: 240 };
@@ -519,6 +535,9 @@ export class WorldScene extends Phaser.Scene {
     this.createPineTree(680, 480);
     this.createPineTree(740, 340);
 
+    // Torii Gate archway leading to hot springs
+    this.add.image(524, 210, 'obj_hotspring_gate').setOrigin(0.5, 0.7).setDepth(210);
+
     // Cavern rocks
     this.createMineableNode(260, 280, 'rock');
     this.createMineableNode(360, 420, 'rock');
@@ -552,6 +571,15 @@ export class WorldScene extends Phaser.Scene {
     this.createCaveWall(576, 160);
     this.createCaveWall(576, 192);
 
+    // Blacksmith Forge for Ember
+    this.add.image(280, 200, 'obj_blacksmith_forge').setOrigin(0.5, 0.5).setDepth(200);
+    const forgeBody = this.obstaclesGroup.create(280, 205, 'obj_blacksmith_forge') as Phaser.Physics.Arcade.Image;
+    forgeBody.setSize(64, 32);
+    forgeBody.setOffset(8, 24);
+    forgeBody.setVisible(false);
+    forgeBody.refreshBody();
+    this.setTileObstacle(Math.floor(280 / 32), Math.floor(200 / 32), false);
+
     // Warm Lantern posts
     this.createLanternPost(224, 128);
     this.createLanternPost(576, 128);
@@ -574,6 +602,214 @@ export class WorldScene extends Phaser.Scene {
 
     this.createMineableNode(140, 460, 'cavern');
     this.createMineableNode(660, 460, 'cavern');
+  }
+
+  private buildSummitMap(width: number, height: number) {
+    // Fill alpine rock base
+    for (let x = 0; x < width; x += 32) {
+      for (let y = 0; y < height; y += 32) {
+        this.add.image(x, y, 'tile_summit_rock').setOrigin(0, 0).setDepth(0);
+      }
+    }
+
+    // Snow ridges & frosted peaks
+    for (let x = 80; x < width - 80; x += 32) {
+      for (let y = 60; y < 220; y += 32) {
+        if ((x + y) % 64 === 0) {
+          this.add.image(x, y, 'tile_summit_snow').setOrigin(0, 0).setDepth(1);
+        }
+      }
+    }
+
+    // Cobblestone path winding up to the observatory
+    for (let y = 240; y < height; y += 32) {
+      this.add.image(400, y, 'tile_path').setOrigin(0, 0).setDepth(1);
+    }
+    for (let x = 320; x <= 480; x += 32) {
+      this.add.image(x, 240, 'tile_path').setOrigin(0, 0).setDepth(1);
+    }
+
+    // Starlit Observatory Landmark
+    this.add.image(400, 180, 'obj_observatory').setOrigin(0.5, 0.5).setDepth(180);
+    const obsBody = this.obstaclesGroup.create(400, 185, 'obj_observatory') as Phaser.Physics.Arcade.Image;
+    obsBody.setSize(76, 40);
+    obsBody.setOffset(10, 34);
+    obsBody.setVisible(false);
+    obsBody.refreshBody();
+    for (let tx = 11; tx <= 14; tx++) {
+      for (let ty = 4; ty <= 6; ty++) {
+        this.setTileObstacle(tx, ty, false);
+      }
+    }
+
+    // Wind Shrine Landmark
+    this.add.image(620, 260, 'obj_wind_shrine').setOrigin(0.5, 0.5).setDepth(260);
+    const shrineBody = this.obstaclesGroup.create(620, 265, 'obj_wind_shrine') as Phaser.Physics.Arcade.Image;
+    shrineBody.setSize(36, 24);
+    shrineBody.setOffset(6, 20);
+    shrineBody.setVisible(false);
+    shrineBody.refreshBody();
+    this.setTileObstacle(Math.floor(620 / 32), Math.floor(260 / 32), false);
+
+    // Pine trees and alpine rocks
+    this.createPineTree(120, 160);
+    this.createPineTree(180, 280);
+    this.createPineTree(140, 420);
+    this.createPineTree(680, 160);
+    this.createPineTree(720, 340);
+    this.createPineTree(660, 480);
+    this.createRock(260, 360);
+    this.createRock(560, 400);
+
+    // Amethyst and gold nodes along cliffside
+    this.createMineableNode(240, 220, 'amethyst');
+    this.createMineableNode(560, 200, 'gold');
+    this.createMineableNode(300, 480, 'amethyst');
+
+    // Lantern posts
+    this.createLanternPost(360, 250);
+    this.createLanternPost(460, 250);
+  }
+
+  private buildDesertMap(width: number, height: number) {
+    // Fill base golden sand
+    for (let x = 0; x < width; x += 32) {
+      for (let y = 0; y < height; y += 32) {
+        this.add.image(x, y, 'tile_desert_sand').setOrigin(0, 0).setDepth(0);
+      }
+    }
+
+    // Dune ridges along north & east margins
+    for (let x = 0; x < width; x += 32) {
+      this.add.image(x, 0, 'tile_desert_dune').setOrigin(0, 0).setDepth(1);
+    }
+    for (let y = 0; y < height; y += 64) {
+      this.add.image(width - 48, y, 'tile_desert_dune').setOrigin(0, 0).setDepth(1);
+    }
+
+    // Center Oasis Pool (water tiles)
+    for (let x = 320; x <= 480; x += 32) {
+      for (let y = 280; y <= 384; y += 32) {
+        this.add.image(x, y, 'tile_water').setOrigin(0, 0).setDepth(1);
+        const waterBody = this.obstaclesGroup.create(x + 16, y + 16, 'tile_water') as Phaser.Physics.Arcade.Image;
+        waterBody.setVisible(false);
+        waterBody.refreshBody();
+        this.setTileObstacle(Math.floor(x / 32), Math.floor(y / 32), false);
+      }
+    }
+
+    // Sun Stone Obelisk Monument
+    this.add.image(400, 180, 'obj_desert_shrine').setOrigin(0.5, 0.5).setDepth(180);
+    const obeliskBody = this.obstaclesGroup.create(400, 190, 'obj_desert_shrine') as Phaser.Physics.Arcade.Image;
+    obeliskBody.setSize(44, 30);
+    obeliskBody.setOffset(10, 44);
+    obeliskBody.setVisible(false);
+    obeliskBody.refreshBody();
+    this.setTileObstacle(Math.floor(400 / 32), Math.floor(180 / 32), false);
+
+    // Oasis Palm Trees ringed around water
+    this.createPalmTree(280, 260);
+    this.createPalmTree(520, 260);
+    this.createPalmTree(270, 400);
+    this.createPalmTree(530, 400);
+    this.createPalmTree(160, 160);
+    this.createPalmTree(660, 180);
+
+    // Saguaro Cacti
+    const addCactus = (cx: number, cy: number) => {
+      this.add.image(cx, cy, 'obj_cactus').setOrigin(0.5, 0.8).setDepth(cy);
+      const b = this.obstaclesGroup.create(cx, cy, 'obj_cactus') as Phaser.Physics.Arcade.Image;
+      b.setSize(18, 14);
+      b.setOffset(7, 30);
+      b.setVisible(false);
+      b.refreshBody();
+      this.setTileObstacle(Math.floor(cx / 32), Math.floor(cy / 32), false);
+    };
+    addCactus(160, 320);
+    addCactus(220, 460);
+    addCactus(620, 320);
+    addCactus(680, 460);
+    addCactus(480, 480);
+
+    // Mineable cavern/gold nodes
+    this.createMineableNode(140, 220, 'gold');
+    this.createMineableNode(660, 240, 'cavern');
+    this.createMineableNode(340, 460, 'cavern');
+  }
+
+  private buildOrchardMap(width: number, height: number) {
+    // Fill base clover grass
+    for (let x = 0; x < width; x += 32) {
+      for (let y = 0; y < height; y += 32) {
+        this.add.image(x, y, 'tile_orchard_grass').setOrigin(0, 0).setDepth(0);
+      }
+    }
+
+    // Timber mulch walkways
+    for (let x = 120; x < width - 120; x += 32) {
+      this.add.image(x, 260, 'tile_orchard_path').setOrigin(0, 0).setDepth(1);
+      this.add.image(x, 420, 'tile_orchard_path').setOrigin(0, 0).setDepth(1);
+    }
+    for (let y = 0; y < height; y += 32) {
+      this.add.image(400, y, 'tile_orchard_path').setOrigin(0, 0).setDepth(1);
+    }
+
+    // Orchard Windmill Landmark
+    this.add.image(420, 160, 'obj_windmill').setOrigin(0.5, 0.5).setDepth(160);
+    const millBody = this.obstaclesGroup.create(420, 170, 'obj_windmill') as Phaser.Physics.Arcade.Image;
+    millBody.setSize(54, 40);
+    millBody.setOffset(20, 50);
+    millBody.setVisible(false);
+    millBody.refreshBody();
+    for (let tx = 12; tx <= 14; tx++) {
+      for (let ty = 4; ty <= 6; ty++) {
+        this.setTileObstacle(tx, ty, false);
+      }
+    }
+
+    // Cedar Beehives in a neat row
+    const addHive = (hx: number, hy: number) => {
+      this.add.image(hx, hy, 'obj_beehive').setOrigin(0.5, 0.7).setDepth(hy);
+      const b = this.obstaclesGroup.create(hx, hy, 'obj_beehive') as Phaser.Physics.Arcade.Image;
+      b.setSize(22, 16);
+      b.setOffset(5, 12);
+      b.setVisible(false);
+      b.refreshBody();
+      this.setTileObstacle(Math.floor(hx / 32), Math.floor(hy / 32), false);
+    };
+    addHive(260, 340);
+    addHive(320, 340);
+    addHive(480, 340);
+    addHive(540, 340);
+
+    // Fruit Tree Orchards (Apples on West terraces, Peaches on East terraces)
+    const addFruitTree = (fx: number, fy: number, tex: string) => {
+      this.add.image(fx, fy, tex).setOrigin(0.5, 0.85).setDepth(fy);
+      const b = this.obstaclesGroup.create(fx, fy, tex) as Phaser.Physics.Arcade.Image;
+      b.setSize(20, 16);
+      b.setOffset(14, 44);
+      b.setVisible(false);
+      b.refreshBody();
+      this.setTileObstacle(Math.floor(fx / 32), Math.floor(fy / 32), false);
+    };
+
+    // Honeycrisp Apple grove
+    addFruitTree(160, 160, 'obj_fruit_tree_apple');
+    addFruitTree(240, 160, 'obj_fruit_tree_apple');
+    addFruitTree(160, 360, 'obj_fruit_tree_apple');
+    addFruitTree(180, 480, 'obj_fruit_tree_apple');
+
+    // Peach grove
+    addFruitTree(580, 160, 'obj_fruit_tree_peach');
+    addFruitTree(660, 160, 'obj_fruit_tree_peach');
+    addFruitTree(640, 360, 'obj_fruit_tree_peach');
+    addFruitTree(600, 480, 'obj_fruit_tree_peach');
+
+    // Lantern posts along the path
+    this.createLanternPost(360, 270);
+    this.createLanternPost(440, 270);
+    this.createLanternPost(360, 430);
+    this.createLanternPost(440, 430);
   }
 
   // --- ENTITY FACTORIES ---
@@ -923,10 +1159,27 @@ export class WorldScene extends Phaser.Scene {
         { id: 'f_3', itemId: 'forage_wildberry', x: 180, y: 220 },
         { id: 'f_4', itemId: 'forage_mushroom', x: 260, y: 190 },
       ];
+    } else if (this.mapId === 'summit') {
+      this.forageSpawns = [
+        { id: 'f_s1', itemId: 'flora_edelweiss', x: 280, y: 320 },
+        { id: 'f_s2', itemId: 'flora_edelweiss', x: 520, y: 340 },
+      ];
+    } else if (this.mapId === 'desert') {
+      this.forageSpawns = [
+        { id: 'f_d1', itemId: 'relic_ancient_tablet', x: 400, y: 440 },
+        { id: 'f_d2', itemId: 'forage_seashell', x: 240, y: 260 },
+      ];
+    } else if (this.mapId === 'orchard') {
+      this.forageSpawns = [
+        { id: 'f_o1', itemId: 'crop_honey', x: 300, y: 370 },
+        { id: 'f_o2', itemId: 'crop_apple', x: 180, y: 220 },
+        { id: 'f_o3', itemId: 'crop_peach', x: 620, y: 220 },
+      ];
     }
 
     this.forageSpawns.forEach((f) => {
-      const spr = this.add.sprite(f.x, f.y, `item_${f.itemId.replace('forage_', '')}`);
+      const tex = ITEMS_DATABASE[f.itemId]?.textureKey || `item_${f.itemId.replace('forage_', '')}`;
+      const spr = this.add.sprite(f.x, f.y, tex);
       spr.setDepth(f.y);
       f.sprite = spr;
     });
@@ -1457,6 +1710,10 @@ export class WorldScene extends Phaser.Scene {
       else if (py < 35 && px >= 260 && px <= 540) {
         this.transitionToMap('forest', px, 580);
       }
+      // South to Orchard
+      else if (py > 600 && px >= 200 && px <= 600) {
+        this.transitionToMap('orchard', px, 60);
+      }
     } else if (this.mapId === 'village') {
       // West to Farm
       if (px < 40) {
@@ -1470,10 +1727,18 @@ export class WorldScene extends Phaser.Scene {
       else if (py < 35 && px >= 200 && px <= 460) {
         this.transitionToMap('forest', 280, 580);
       }
+      // South to Desert
+      else if (py > 600 && px >= 260 && px <= 680) {
+        this.transitionToMap('desert', px, 60);
+      }
     } else if (this.mapId === 'beach') {
       // West to Village
       if (px < 40) {
         this.transitionToMap('village', 900, py);
+      }
+      // South to Desert
+      else if (py > 600) {
+        this.transitionToMap('desert', 60, 320);
       }
     } else if (this.mapId === 'forest') {
       // South to Farm
@@ -1483,6 +1748,33 @@ export class WorldScene extends Phaser.Scene {
       // East to Village
       else if (px > 760) {
         this.transitionToMap('village', 320, 60);
+      }
+      // North to Summit
+      else if (py < 35 && px >= 260 && px <= 540) {
+        this.transitionToMap('summit', 400, 580);
+      }
+    } else if (this.mapId === 'summit') {
+      // South to Forest
+      if (py > 600) {
+        this.transitionToMap('forest', 400, 60);
+      }
+    } else if (this.mapId === 'desert') {
+      // North to Village
+      if (py < 35) {
+        this.transitionToMap('village', px, 580);
+      }
+      // West to Beach
+      else if (px < 40) {
+        this.transitionToMap('beach', 900, 320);
+      }
+    } else if (this.mapId === 'orchard') {
+      // North to Farm
+      if (py < 35) {
+        this.transitionToMap('farm', px, 580);
+      }
+      // East to Village
+      else if (px > 760) {
+        this.transitionToMap('village', 60, 480);
       }
     } else if (this.mapId === 'mine') {
       // South to Forest
@@ -1500,6 +1792,14 @@ export class WorldScene extends Phaser.Scene {
     // Check Hot Springs in Forest
     if (this.mapId === 'forest' && px >= 440 && px <= 608 && py >= 224 && py <= 352) {
       prompt = '♨️ Soaking in Hot Springs (+3 Energy/s)';
+    } else if (this.mapId === 'summit' && px >= 340 && px <= 460 && py >= 140 && py <= 240) {
+      prompt = '🔭 Skyreach Observatory: Gazing upon island constellations';
+    } else if (this.mapId === 'desert' && px >= 350 && px <= 450 && py >= 150 && py <= 240) {
+      prompt = '☀️ Sun Stone Obelisk: Ancient solar runes humming with warmth';
+    } else if (this.mapId === 'orchard' && px >= 360 && px <= 480 && py >= 130 && py <= 220) {
+      prompt = '🌾 Whispering Windmill: Grinding harvest flour & pressing cider';
+    } else if (this.mapId === 'mine' && px >= 230 && px <= 330 && py >= 160 && py <= 250) {
+      prompt = '🔨 Ember’s Blacksmith Forge: Roaring coal fire & anvil';
     }
 
     // Check NPC nearby

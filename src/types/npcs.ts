@@ -1,7 +1,7 @@
 export interface NPCScheduleWaypoint {
   hour: number;
   minute: number;
-  mapId: 'village' | 'farm' | 'beach' | 'forest' | 'mine';
+  mapId: 'village' | 'farm' | 'beach' | 'forest' | 'mine' | 'summit' | 'desert' | 'orchard';
   x: number;
   y: number;
   activity: string;
@@ -42,7 +42,7 @@ export interface NPCState {
   friendshipPoints: number; // 0 to 2500 (250 points = 1 heart, max 10 hearts)
   talkedToday: boolean;
   giftedToday: boolean;
-  currentMap: 'village' | 'farm' | 'beach' | 'forest' | 'mine';
+  currentMap: 'village' | 'farm' | 'beach' | 'forest' | 'mine' | 'summit' | 'desert' | 'orchard';
   x: number;
   y: number;
   currentActivity: string;
@@ -291,6 +291,181 @@ export const NPCS_DATABASE: Record<string, NPCDefinition> = {
       {
         id: 'nori_greeting_2',
         text: 'Sometimes silence speaks louder than words. Watching the clouds drift is my favorite meditation.',
+      },
+    ],
+  },
+  kai: {
+    id: 'kai',
+    name: 'Kai',
+    title: 'Summit Ranger',
+    bio: 'Daring mountain cartographer and stargazer who watches over the alpine peaks of Skyreach Summit.',
+    personality: 'Adventurous & Observant',
+    avatarColor: '#0284c7',
+    shirtColor: '#0ea5e9',
+    hairColor: '#0f172a',
+    birthday: { season: 'autumn', day: 8 },
+    lovedItems: ['mat_amethyst', 'crop_sunflower', 'mat_gold', 'flora_edelweiss'],
+    likedItems: ['mat_iron', 'artisan_cider', 'food_apple_pie'],
+    dislikedItems: ['mat_clay'],
+    schedule: [
+      { hour: 6, minute: 0, mapId: 'summit', x: 280, y: 220, activity: 'Surveying morning cloud cover at the observatory' },
+      { hour: 11, minute: 0, mapId: 'summit', x: 440, y: 300, activity: 'Calibrating the great brass telescope' },
+      { hour: 15, minute: 0, mapId: 'summit', x: 360, y: 380, activity: 'Climbing windward ridges to document flora' },
+      { hour: 19, minute: 0, mapId: 'summit', x: 300, y: 250, activity: 'Stargazing constellation alignments' },
+      { hour: 22, minute: 0, mapId: 'summit', x: 220, y: 280, activity: 'Resting in the alpine cabin' },
+    ],
+    dialogues: [
+      {
+        id: 'kai_greeting_1',
+        text: 'The air up here is crystal clear! From this summit, you can map the entire ocean horizon.',
+        choices: [
+          { text: 'Have you spotted any shooting stars?', response: 'Every single night! Next time you see a streak of silver, make a wish on the island spirits.', friendshipDelta: 25 },
+          { text: 'Is the climb difficult?', response: 'A brisk workout for the lungs, but the view is beyond compare!', friendshipDelta: 15 },
+        ],
+      },
+      {
+        id: 'kai_greeting_2',
+        text: 'Keep your eyes on the stars and your feet rooted in the mountain stone.',
+      },
+    ],
+  },
+  selene: {
+    id: 'selene',
+    name: 'Selene',
+    title: 'Desert Mystic',
+    bio: 'Archaeologist who deciphers ancient monolithic ruins across the Sunbaked Oasis.',
+    personality: 'Mysterious & Scholarly',
+    avatarColor: '#d97706',
+    shirtColor: '#f59e0b',
+    hairColor: '#451a03',
+    birthday: { season: 'summer', day: 21 },
+    lovedItems: ['relic_ancient_tablet', 'crop_bluerose', 'forage_seashell', 'artisan_honey_tea'],
+    likedItems: ['crop_melon', 'mat_clay', 'crop_eggplant'],
+    dislikedItems: ['bug_butterfly'],
+    schedule: [
+      { hour: 7, minute: 0, mapId: 'desert', x: 260, y: 240, activity: 'Meditating before the Sun Stone Obelisk' },
+      { hour: 11, minute: 0, mapId: 'desert', x: 420, y: 320, activity: 'Excavating pottery shards in sandstone ruins' },
+      { hour: 15, minute: 0, mapId: 'desert', x: 500, y: 280, activity: 'Resting in the shade of date palms' },
+      { hour: 19, minute: 0, mapId: 'desert', x: 360, y: 350, activity: 'Cataloging hieroglyphic rubbings' },
+      { hour: 22, minute: 0, mapId: 'desert', x: 200, y: 220, activity: 'Studying celestial maps inside tent' },
+    ],
+    dialogues: [
+      {
+        id: 'selene_greeting_1',
+        text: 'The desert sands remember the footsteps of civilizations long forgotten. What brings you to this sunbaked sanctuary?',
+        choices: [
+          { text: 'I love discovering ancient island lore!', response: 'Then your spirit belongs among seekers of truth. Let the sands whisper their secrets.', friendshipDelta: 25 },
+          { text: 'Just admiring the majestic ruins.', response: 'They have endured for centuries, standing tall against both wind and time.', friendshipDelta: 15 },
+        ],
+      },
+      {
+        id: 'selene_greeting_2',
+        text: 'Drink plenty of water under the desert sun, traveler. Even stone can be weathered by heat.',
+      },
+    ],
+  },
+  cedric: {
+    id: 'cedric',
+    name: 'Cedric',
+    title: 'Master Beekeeper',
+    bio: 'Convivial orchardist and beekeeper who turns ripe tree blossoms into liquid gold.',
+    personality: 'Jovial & Generous',
+    avatarColor: '#84cc16',
+    shirtColor: '#65a30d',
+    hairColor: '#713f12',
+    birthday: { season: 'spring', day: 25 },
+    lovedItems: ['crop_honey', 'artisan_cider', 'crop_strawberry', 'dish_peach_tart'],
+    likedItems: ['crop_apple', 'crop_peach', 'food_apple_pie'],
+    dislikedItems: ['mat_stone'],
+    schedule: [
+      { hour: 6, minute: 0, mapId: 'orchard', x: 320, y: 220, activity: 'Inspecting cedar beehives and checking queens' },
+      { hour: 10, minute: 0, mapId: 'orchard', x: 460, y: 300, activity: 'Pruning Honeycrisp apple and peach branches' },
+      { hour: 14, minute: 0, mapId: 'orchard', x: 240, y: 380, activity: 'Operating the wooden cider press' },
+      { hour: 18, minute: 0, mapId: 'orchard', x: 380, y: 260, activity: 'Tasting batch of wildflower honey' },
+      { hour: 21, minute: 0, mapId: 'orchard', x: 200, y: 240, activity: 'Relaxing by the orchard windmill' },
+    ],
+    dialogues: [
+      {
+        id: 'cedric_greeting_1',
+        text: 'Bzz-bzz! Welcome to the orchard, friend! Breathe in that sweet nectar aroma!',
+        choices: [
+          { text: 'Your cider is the best on the island!', response: 'Aha! Music to my ears! Have a jar of honey for your appreciation!', friendshipDelta: 25 },
+          { text: 'How do you keep the bees so calm?', response: 'Patience, gentle movements, and plenty of blooming clover flowers.', friendshipDelta: 15 },
+        ],
+      },
+      {
+        id: 'cedric_greeting_2',
+        text: 'Treat the pollinators with kindness, and nature will shower you with boundless sweetness!',
+      },
+    ],
+  },
+  ember: {
+    id: 'ember',
+    name: 'Ember',
+    title: 'Blacksmith Apprentice',
+    bio: 'Energetic metalworker hammering glowing ingots into masterwork tools in the crystal mines.',
+    personality: 'Spirited & Hardworking',
+    avatarColor: '#ef4444',
+    shirtColor: '#b91c1c',
+    hairColor: '#172554',
+    birthday: { season: 'winter', day: 14 },
+    lovedItems: ['mat_iron', 'mat_gold', 'mat_amethyst', 'tool_golden_pickaxe'],
+    likedItems: ['mat_stone', 'mat_wood', 'mat_clay'],
+    dislikedItems: ['crop_bluerose'],
+    schedule: [
+      { hour: 7, minute: 0, mapId: 'mine', x: 260, y: 320, activity: 'Stoking coal furnace and testing bellows' },
+      { hour: 10, minute: 0, mapId: 'mine', x: 380, y: 260, activity: 'Hammering iron ingots on the heavy anvil' },
+      { hour: 14, minute: 0, mapId: 'mine', x: 480, y: 360, activity: 'Inspecting deep amethyst geode clusters' },
+      { hour: 18, minute: 0, mapId: 'mine', x: 300, y: 420, activity: 'Sharpening pickaxe blades and sorting ore' },
+      { hour: 22, minute: 0, mapId: 'mine', x: 220, y: 260, activity: 'Cooling down near the cavern pool' },
+    ],
+    dialogues: [
+      {
+        id: 'ember_greeting_1',
+        text: 'Clang-clang! Stand back from the sparks! What kind of ore did you haul up from the deep veins today?',
+        choices: [
+          { text: 'I found a gorgeous amethyst geode!', response: 'Whoa, let me see! The crystalline symmetry on that is breathtaking!', friendshipDelta: 25 },
+          { text: 'Keep up the fantastic craftsmanship!', response: 'Thanks! Every strike on this anvil makes our island tools stronger!', friendshipDelta: 15 },
+        ],
+      },
+      {
+        id: 'ember_greeting_2',
+        text: 'Hard work and honest sweat—that is the blacksmith motto!',
+      },
+    ],
+  },
+  aiden: {
+    id: 'aiden',
+    name: 'Aiden',
+    title: 'Marine Biologist',
+    bio: 'Passionate ocean researcher documenting tidal coral reefs and elusive deep-water species.',
+    personality: 'Curious & Upbeat',
+    avatarColor: '#06b6d4',
+    shirtColor: '#0891b2',
+    hairColor: '#fef08a',
+    birthday: { season: 'summer', day: 3 },
+    lovedItems: ['fish_moonlight_salmon', 'fish_rainbow_trout', 'mat_amethyst', 'forage_seashell'],
+    likedItems: ['fish_bluecarp', 'fish_sunbass', 'dish_glazed_salmon'],
+    dislikedItems: ['mat_stone'],
+    schedule: [
+      { hour: 6, minute: 0, mapId: 'beach', x: 420, y: 240, activity: 'Examining tide pools for rare sea anemones' },
+      { hour: 10, minute: 0, mapId: 'beach', x: 540, y: 320, activity: 'Measuring water salinity on the lighthouse pier' },
+      { hour: 14, minute: 0, mapId: 'beach', x: 360, y: 400, activity: 'Photographing coral formations and clownfish' },
+      { hour: 18, minute: 0, mapId: 'beach', x: 280, y: 340, activity: 'Comparing notes with Oliver on seasonal runs' },
+      { hour: 21, minute: 0, mapId: 'beach', x: 480, y: 260, activity: 'Writing research logs under lantern light' },
+    ],
+    dialogues: [
+      {
+        id: 'aiden_greeting_1',
+        text: 'The ocean holds more mysteries than all the library shelves on the continent! Caught anything exciting lately?',
+        choices: [
+          { text: 'I am trying to catch the legendary Rainbow Trout!', response: 'A magnificent specimen! Try using sweet corn bait near the deep reef dropoff!', friendshipDelta: 25 },
+          { text: 'The reef waters look so vibrant today.', response: 'That is because our island waters are so pure and protected!', friendshipDelta: 15 },
+        ],
+      },
+      {
+        id: 'aiden_greeting_2',
+        text: 'Listen to the tides... they sing the heartbeat of our world.',
       },
     ],
   },
