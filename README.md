@@ -245,30 +245,6 @@ cozyhaven/
 │       ├── voice_and_multiplayer.test.ts
 │       ├── pathfinding_and_mechanics.test.ts
 │       └── save.test.ts
-│   │   ├── HUD.tsx                 # Status bar atas: Jam, Musim, Cuaca, Energi, Koin, Menu
-│   │   ├── Hotbar.tsx              # Quick hotbar 9 slot bawah dengan seleksi numerik
-│   │   ├── InteractionPrompt.tsx   # Tooltip prompt interaksi mengambang
-│   │   ├── VirtualControls.tsx     # Virtual D-Pad & Tombol aksi untuk perangkat mobile
-│   │   └── modals/                 # Dialog modal jendela game
-│   │       ├── InventoryModal.tsx  # Tas ransel, inspeksi item, sortir, makan
-│   │       ├── ShopModal.tsx       # Toko serba ada Maple (Beli & Jual)
-│   │       ├── ShippingBinModal.tsx# Kotak kirim hasil panen semalam
-│   │       ├── DialogueModal.tsx   # Dialog NPC bercabang & menu hadiah
-│   │       ├── QuestModal.tsx      # Jurnal pelacakan misi & klaim hadiah
-│   │       ├── MuseumModal.tsx     # Indeks donasi museum akuarium, serangga, botani
-│   │       ├── MapModal.tsx        # Peta navigasi visual pulau
-│   │       ├── CalendarModal.tsx   # Kalender 28 hari dan jadwal ulang tahun warga
-│   │       ├── FishingModal.tsx    # Minigame memancing reel & hook
-│   │       ├── SettingsModal.tsx   # Pengaturan volume audio, save slots, export/import JSON
-│   │       ├── SleepConfirmModal.tsx # Konfirmasi tidur di tempat tidur
-│   │       └── ShippingReportModal.tsx # Laporan penghasilan koin pagi hari
-│   └── __tests__/                  # Automated Unit Test Suites (Vitest)
-│       ├── farming.test.ts
-│       ├── economy.test.ts
-│       ├── inventory.test.ts
-│       ├── npc.test.ts
-│       ├── quests.test.ts
-│       └── save.test.ts
 └── docs/
     ├── ARCHITECTURE.md             # Dokumen arsitektur teknis & desain sistem
     └── GAMEPLAY_GUIDE.md           # Panduan lengkap gameplay dan tips bertani
