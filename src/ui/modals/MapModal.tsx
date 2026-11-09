@@ -33,6 +33,11 @@ interface ZoneCardConfig {
 export const MapModal: React.FC<MapModalProps> = ({ onClose }) => {
   const currentMap = gameState.data.player.activeMap;
 
+  const handleFastTravel = (zoneId: MapId) => {
+    gameState.fastTravelTo(zoneId);
+    onClose();
+  };
+
   const getVillagersInMap = (mapId: MapId) => {
     return Object.values(NPCS_DATABASE).filter((npc) => {
       const state = gameState.data.npcs[npc.id];
@@ -190,14 +195,22 @@ export const MapModal: React.FC<MapModalProps> = ({ onClose }) => {
                     )}
                   </div>
 
-                  {/* You Are Here Pill */}
-                  {isHere && (
+                  {/* You Are Here Pill or Fast Travel Button */}
+                  {isHere ? (
                     <div
                       className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-black shadow-xs animate-bounce ${zone.badgeCol}`}
                     >
                       <Navigation className="w-3 h-3" />
                       <span>Here</span>
                     </div>
+                  ) : (
+                    <button
+                      onClick={() => handleFastTravel(zone.id)}
+                      className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black bg-haven-800 hover:bg-haven-950 text-white shadow-xs transition hover:scale-105 active:scale-95"
+                      title={`Fast travel to ${zone.name}`}
+                    >
+                      <span>⛵ Travel</span>
+                    </button>
                   )}
                 </div>
               </div>

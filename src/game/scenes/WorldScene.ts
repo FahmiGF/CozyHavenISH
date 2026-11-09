@@ -294,6 +294,9 @@ export class WorldScene extends Phaser.Scene {
       EventBus.on('VIRTUAL_ACTION_TRIGGER', (action: 'action' | 'interact') => {
         if (action === 'action') this.handleActionSpace();
         else if (action === 'interact') this.handleActionE();
+      }),
+      EventBus.on('TELEPORT_PLAYER', (data: { mapId: MapId; x?: number; y?: number }) => {
+        this.transitionToMap(data.mapId, data.x, data.y);
       })
     );
   }

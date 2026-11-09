@@ -27,6 +27,7 @@ import {
   Box,
   Eye,
   Layers,
+  BookOpen,
 } from 'lucide-react';
 
 interface NotificationToast {
@@ -347,6 +348,13 @@ export const HUD: React.FC<HUDProps> = ({ onOpenModal, viewMode = '2d', onToggle
             className="p-2 rounded-xl bg-haven-200 hover:bg-haven-300 active:scale-95 text-haven-800 transition"
           >
             <CalendarIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => onOpenModal('guide')}
+            title="Explorer's Guide & Manual [H]"
+            className="p-2 rounded-xl bg-amber-200 hover:bg-amber-300 active:scale-95 text-amber-950 transition border border-amber-400/80 shadow-xs"
+          >
+            <BookOpen className="w-5 h-5" />
           </button>
           <button
             onClick={() => onOpenModal('sleep_confirm')}

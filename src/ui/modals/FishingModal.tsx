@@ -66,8 +66,7 @@ export const FishingModal: React.FC<FishingModalProps> = ({ onClose }) => {
     setPhase('caught');
     sound.playSfx('harvest');
     gameState.addItem(picked, 1);
-    gameState.data.statistics.fishCaught += 1;
-    gameState.checkQuestProgress('catch_fish', picked, 1);
+    gameState.recordFishCaught(picked);
   };
 
   return (

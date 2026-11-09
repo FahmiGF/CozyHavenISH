@@ -73,19 +73,20 @@ export class CozyHaven3D {
       alpha: false,
     });
     this.renderer.setSize(width, height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     container.appendChild(this.renderer.domElement);
 
     // 4. Lights
-    this.ambientLight = new THREE.HemisphereLight('#fef3c7', '#4d7c0f', 0.8);
+    this.ambientLight = new THREE.HemisphereLight('#fef3c7', '#4d7c0f', 0.85);
     this.scene.add(this.ambientLight);
 
-    this.dirLight = new THREE.DirectionalLight('#ffffff', 1.2);
+    this.dirLight = new THREE.DirectionalLight('#ffffff', 1.25);
     this.dirLight.position.set(30, 45, 20);
     this.dirLight.castShadow = true;
+    this.dirLight.shadow.bias = -0.0004;
     this.dirLight.shadow.mapSize.width = 1024;
     this.dirLight.shadow.mapSize.height = 1024;
     this.dirLight.shadow.camera.near = 0.5;
@@ -196,8 +197,23 @@ export class CozyHaven3D {
       }),
       EventBus.on('CROPS_UPDATED', () => {
         this.rebuildCrops();
+      }),
+      EventBus.on('TELEPORT_PLAYER', (data: { mapId: any; x?: number; y?: number }) => {
+        this.teleportTo(data.mapId, data.x, data.y);
       })
     );
+  }
+
+  public teleportTo(target: any, x?: number, y?: number) {
+    const spawnX = x !== undefined ? x : 400;
+    const spawnY = y !== undefined ? y : 350;
+    gameState.data.player.activeMap = target;
+    gameState.data.player.x = spawnX;
+    gameState.data.player.y = spawnY;
+    this.playerMesh.position.set(spawnX * SCALE, 0, spawnY * SCALE);
+    this.playerTargetPos.copy(this.playerMesh.position);
+    this.buildCurrentZone();
+    EventBus.emit('ZONE_CHANGED', target);
   }
 
   // --- PLAYER 3D MODEL ---
@@ -256,6 +272,7 @@ export class CozyHaven3D {
     this.playerTargetPos.copy(this.playerMesh.position);
 
     this.scene.add(this.playerMesh);
+    gameState.unlockAchievement('master_of_dimensions');
   }
 
   // --- ZONE BUILDING ---
@@ -308,14 +325,18 @@ export class CozyHaven3D {
     while (group.children.length > 0) {
       const child = group.children[0];
       group.remove(child);
-      if ((child as any).geometry) (child as any).geometry.dispose();
-      if ((child as any).material) {
-        if (Array.isArray((child as any).material)) {
-          (child as any).material.forEach((m: any) => m.dispose());
-        } else {
-          (child as any).material.dispose();
+      child.traverse((node: any) => {
+        if (node.geometry) {
+          node.geometry.dispose();
         }
-      }
+        if (node.material) {
+          if (Array.isArray(node.material)) {
+            node.material.forEach((m: any) => m && m.dispose && m.dispose());
+          } else if (node.material.dispose) {
+            node.material.dispose();
+          }
+        }
+      });
     }
   }
 

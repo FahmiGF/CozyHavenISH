@@ -11,6 +11,8 @@ import {
   FarmTileState,
   TutorialStage,
   TutorialProgress,
+  AchievementDefinition,
+  ACHIEVEMENTS_LIST,
 } from '../types/game';
 import { InventorySlot, ITEMS_DATABASE, ItemDefinition } from '../types/items';
 import { CROPS_DATABASE, PlantedCrop, Season } from '../types/crops';
@@ -249,6 +251,8 @@ export class GameStateManager {
         stageProgress: 0,
         dismissed: false,
       },
+      achievements: {},
+      graphicsQuality: 'high',
       statistics: {
         cropsHarvested: 0,
         fishCaught: 0,
@@ -706,6 +710,8 @@ export class GameStateManager {
     sound.playSfx('harvest');
     this.data.statistics.cropsHarvested += 1;
     this.checkQuestProgress('harvest_crop', cropDef.id, 1);
+    if (this.data.statistics.cropsHarvested >= 1) this.unlockAchievement('green_thumb');
+    if (this.data.statistics.cropsHarvested >= 20) this.unlockAchievement('bountiful_harvest');
 
     if (cropDef.regrows) {
       // Regrowing crop stays planted, reset to stage 2
@@ -790,6 +796,7 @@ export class GameStateManager {
 
     this.data.statistics.oresMined = (this.data.statistics.oresMined || 0) + 1;
     this.advanceTutorial('mine', 1);
+    if ((this.data.statistics.oresMined || 0) >= 10) this.unlockAchievement('deep_delver');
 
     const itemDef = ITEMS_DATABASE[primaryItem];
     EventBus.emit('SHOW_NOTIFICATION', {
@@ -852,6 +859,7 @@ export class GameStateManager {
         this.data.tutorial.currentStage += 1;
         if (this.data.tutorial.currentStage > TUTORIAL_STAGES.length) {
           this.data.tutorial.isCompleted = true;
+          this.unlockAchievement('archipelago_legend');
           EventBus.emit('SHOW_NOTIFICATION', {
             title: 'Tutorial Complete!',
             message: 'You graduated the CozyHaven newcomer guide! Enjoy island life.',
@@ -878,6 +886,116 @@ export class GameStateManager {
       dismissed: false,
     };
     EventBus.emit('TUTORIAL_UPDATED', this.data.tutorial);
+  }
+
+  // --- ACHIEVEMENTS & FAST TRAVEL ---
+  public unlockAchievement(id: string): boolean {
+    if (!this.data.achievements) {
+      this.data.achievements = {};
+    }
+    if (this.data.achievements[id]) return false;
+
+    this.data.achievements[id] = Date.now();
+    const ach = ACHIEVEMENTS_LIST.find((a) => a.id === id);
+    if (ach) {
+      if (ach.rewardCoins > 0) {
+        this.data.player.coins += ach.rewardCoins;
+        this.data.statistics.coinsEarnedTotal += ach.rewardCoins;
+        EventBus.emit('COINS_CHANGED', this.data.player.coins, ach.rewardCoins);
+      }
+      sound.playSfx('fanfare');
+      EventBus.emit('SHOW_NOTIFICATION', {
+        title: 'Achievement Unlocked!',
+        message: `${ach.icon} ${ach.title}: ${ach.description} (+${ach.rewardCoins} 🪙)`,
+        icon: ach.icon,
+      });
+      EventBus.emit('ACHIEVEMENT_UNLOCKED', ach);
+
+      const nonLegendCount = ACHIEVEMENTS_LIST.filter((a) => a.id !== 'archipelago_legend').length;
+      const currentUnlocked = Object.keys(this.data.achievements).filter((k) => k !== 'archipelago_legend').length;
+      if (currentUnlocked >= nonLegendCount) {
+        setTimeout(() => this.unlockAchievement('archipelago_legend'), 800);
+      }
+
+      this.saveGame(1);
+    }
+    return true;
+  }
+
+  public getAchievements(): Array<{ definition: AchievementDefinition; unlocked: boolean; unlockedAt?: number }> {
+    if (!this.data.achievements) this.data.achievements = {};
+    return ACHIEVEMENTS_LIST.map((def) => ({
+      definition: def,
+      unlocked: Boolean(this.data.achievements && this.data.achievements[def.id]),
+      unlockedAt: this.data.achievements ? this.data.achievements[def.id] : undefined,
+    }));
+  }
+
+  public fastTravelTo(targetMap: MapId, x?: number, y?: number) {
+    let spawnX = x;
+    let spawnY = y;
+
+    if (spawnX === undefined || spawnY === undefined) {
+      switch (targetMap) {
+        case 'house':
+          spawnX = 140;
+          spawnY = 160;
+          break;
+        case 'village':
+          spawnX = 400;
+          spawnY = 350;
+          break;
+        case 'beach':
+          spawnX = 400;
+          spawnY = 280;
+          break;
+        case 'forest':
+          spawnX = 400;
+          spawnY = 300;
+          break;
+        case 'mine':
+          spawnX = 400;
+          spawnY = 540;
+          break;
+        case 'summit':
+          spawnX = 400;
+          spawnY = 350;
+          break;
+        case 'desert':
+          spawnX = 400;
+          spawnY = 300;
+          break;
+        case 'orchard':
+          spawnX = 400;
+          spawnY = 300;
+          break;
+        case 'farm':
+        default:
+          spawnX = 400;
+          spawnY = 350;
+          break;
+      }
+    }
+
+    sound.playSfx('click');
+    this.setActiveMap(targetMap);
+    this.data.player.x = spawnX;
+    this.data.player.y = spawnY;
+
+    EventBus.emit('TELEPORT_PLAYER', { mapId: targetMap, x: spawnX, y: spawnY });
+    EventBus.emit('SHOW_NOTIFICATION', {
+      title: 'Fast Travel',
+      message: `Arrived at ${targetMap.toUpperCase()}!`,
+      icon: '⛵',
+    });
+    this.unlockAchievement('island_voyager');
+  }
+
+  public recordFishCaught(fishItemId: string) {
+    this.data.statistics.fishCaught += 1;
+    this.checkQuestProgress('catch_fish', fishItemId, 1);
+    this.unlockAchievement('first_catch');
+    this.saveGame(1);
   }
 
   // --- ECONOMY & SHOPS ---
@@ -973,6 +1091,8 @@ export class GameStateManager {
     sound.playSfx('dialogue');
     this.checkQuestProgress('talk_to_npc', npcId, 1);
     this.advanceTutorial('talk', 1);
+    const metCount = Object.values(this.data.npcs).filter((n) => n.friendshipPoints > 0).length;
+    if (metCount >= 12) this.unlockAchievement('social_butterfly');
     EventBus.emit('OPEN_MODAL', 'dialogue', { npcId });
     return true;
   }
@@ -1349,6 +1469,7 @@ export class GameStateManager {
     });
 
     this.checkQuestProgress('cook_dish', recipe.resultItemId, 1);
+    this.unlockAchievement('master_chef');
     EventBus.emit('INVENTORY_UPDATED', this.data.inventory);
     return true;
   }

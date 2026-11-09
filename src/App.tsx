@@ -21,6 +21,7 @@ import { SleepConfirmModal } from './ui/modals/SleepConfirmModal';
 import { ShippingReportModal } from './ui/modals/ShippingReportModal';
 import { CookingModal } from './ui/modals/CookingModal';
 import { MultiplayerModal } from './ui/modals/MultiplayerModal';
+import { GuideModal } from './ui/modals/GuideModal';
 import { DayEarningsReport, GameViewMode } from './types/game';
 import { ThreeViewContainer } from './game/three/ThreeViewContainer';
 
@@ -73,6 +74,9 @@ export const App: React.FC = () => {
         setActiveModal((prev) => (prev === 'quest' ? null : 'quest'));
       } else if (e.key === 'm' || e.key === 'M') {
         setActiveModal((prev) => (prev === 'map' ? null : 'map'));
+      } else if (e.key === 'h' || e.key === 'H' || e.key === 'F1') {
+        e.preventDefault();
+        setActiveModal((prev) => (prev === 'guide' ? null : 'guide'));
       } else if (e.key === 'v' || e.key === 'V') {
         toggleViewMode();
       } else if (e.key === 'Escape') {
@@ -145,6 +149,7 @@ export const App: React.FC = () => {
       {activeModal === 'calendar' && <CalendarModal onClose={closeModal} />}
       {activeModal === 'fishing' && <FishingModal onClose={closeModal} />}
       {activeModal === 'cooking' && <CookingModal onClose={closeModal} />}
+      {activeModal === 'guide' && <GuideModal onClose={closeModal} />}
       {activeModal === 'multiplayer' && <MultiplayerModal onClose={closeModal} />}
       {activeModal === 'settings' && <SettingsModal onClose={closeModal} />}
       {activeModal === 'sleep_confirm' && <SleepConfirmModal onClose={closeModal} />}

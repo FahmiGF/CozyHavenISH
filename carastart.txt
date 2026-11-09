@@ -1,0 +1,29 @@
+================================================================================
+                    CARA MENJALANKAN: COZYHAVEN
+================================================================================
+
+Game Simulasi Kehidupan Santai & Pertanian 2D/3D (Phaser + Three.js + React).
+
+Persyaratan:
+- Node.js versi 18 ke atas
+- Browser modern dengan dukungan WebGL
+
+CARA 1 (Paling Cepat - 1-Click Launcher):
+1. Klik dua kali file:
+   Buka_CozyHaven.bat
+2. Browser akan terbuka otomatis di http://localhost:5173
+
+CARA 2 (Manual via Terminal):
+1. Buka Terminal di folder ini:
+   cd "C:\Kuliah Sisfor\Github Project\cozyhaven"
+2. Install dependensi jika pertama kali:
+   npm install
+3. Jalankan client game:
+   npm run dev
+4. Buka browser di http://localhost:5173
+
+(Opsional) Menjalankan Server Multiplayer:
+- Buka terminal baru dan jalankan: npm run server (port 3001)
+
+Untuk beralih kamera 2D / 3D di dalam game: Tekan tombol [V].
+Untuk menghentikan: Tekan Ctrl + C di terminal.
