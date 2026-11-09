@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+  }
+}
+
+/* Custom Cozy Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(238, 227, 205, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(141, 124, 65, 0.45);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(126, 97, 53, 0.7);
+}
+
+/* Cozy Card & Button Styles */
+.cozy-panel {
+  background: #fbf7ee;
+  border: 4px solid #7e5c36;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px -5px rgba(60, 40, 20, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.cozy-button {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 0 #5c3a1e;
+}
+.cozy-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #5c3a1e;
+}
+.cozy-button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #5c3a1e;
+}
+
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
