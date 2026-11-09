@@ -114,6 +114,36 @@ Setiap penduduk desa kini memiliki suara AI yang disintesis secara dinamis sesua
 - Kontrol keyboard & mouse lengkap di Desktop.
 - Virtual D-Pad dan tombol aksi sentuh (*on-screen touch controls*) responsif di perangkat layar sentuh/ponsel.
 
+### 9. Eksplorasi 5 Zona Pulau (Multi-Zone Seamless Exploration)
+- **Sunburst Farm**: Ladang utama pemain untuk bercocok tanam, peternakan sapi dan ayam, cottage, dan shipping bin.
+- **Maple Village**: Pusat pemukiman warga, toko kelontong Maple, kafe Poppy, taman bermain, dan museum pulau.
+- **Seagull Beach**: Pesisir pantai berpasir emas, dermaga memancing kayu milik Oliver, karang laut, dan pohon kelapa tropis.
+- **Whispering Forest**: Hutan lebat penuh pohon pinus, semak buah liar (berry forage), dan kolam pemandian air panas alami.
+- **Crystal Mine**: Gua tambang kristal berbatu andesit dengan urat bijih besi, emas, dan batu mulia kecubung ungu (*amethyst*).
+- **Peta Interaktif Pulau (M)**: Dilengkapi kompas navigasi dan pelacak posisi real-time seluruh penduduk desa di kelima zona.
+
+### 10. Navigasi Cerdas NPC (A* Grid Pathfinding)
+- Algoritma pencarian rute terpendek **A\*** berbasis grid dinamis (*Manhattan distance heuristic*).
+- Penghindaran rintangan (*obstacle detection*) cerdas terhadap bangunan, pohon, batu tambang, air, dan pagar.
+- Mode *Spiral Neighbor Search* otomatis ketika target tujuan berada tepat di atas petak tertutup.
+- Siklus hidup NPC yang hidup: berjalan lancar dari rumah ke tempat kerja, beristirahat di bangku taman, dan berkeliaran santai (*idle wandering*) di zona masing-masing.
+
+### 11. Pertambangan Bijih & Kristal (Mining System)
+- Hancurkan batuan tambang menggunakan Beliung (*Pickaxe*):
+  - **Stone Node**: Menghasilkan batu bangunan (*Stone*).
+  - **Iron Node**: Menghasilkan bijih besi (*Iron Ore*).
+  - **Gold Node**: Menghasilkan bijih emas murni (*Gold Ore*).
+  - **Amethyst Geode**: Menghasilkan permata kecubung berkilau (*Amethyst Gem*).
+- Dilengkapi efek suara hantaman palu tambang prosedural dan konsumsi energi yang terukur.
+
+### 12. Pemandian Air Panas Alami (Natural Hot Springs)
+- Berendam di kolam air panas alami di tengah Hutan Whispering (*Whispering Forest*).
+- Partikel uap air panas terapeutik memulihkan **+3 Energi per detik**, menjadi tempat peristirahatan sempurna setelah seharian mencangkul dan menambang!
+
+### 13. Panduan Pemula Interaktif 8 Tahap (Newcomer Tutorial Guide)
+- Kartu panduan ringkas dan interaktif yang dapat disembunyikan/dibuka (*collapsible*) di HUD atas.
+- Mengarahkan pemain baru langkah demi langkah dari menyapa warga desa, mencangkul petak tanah, menyiram tanaman, memancing di pantai, menambang bijih, hingga berendam di kolam air panas.
+
 ---
 
 ## ⌨️ Panduan Tombol Kontrol (Desktop)
@@ -137,7 +167,7 @@ CozyHaven dilengkapi dengan suite pengujian unit berbasis **Vitest**:
 ```bash
 npm test
 ```
-**Cakupan pengujian (31 unit tests passed 100%):**
+**Cakupan pengujian (41 unit tests passed 100% di 9 test suites):**
 - `farming.test.ts`: Pencangkulan, tanam bibit, siram air, tahap pertumbuhan per malam, dan pemanenan.
 - `economy.test.ts`: Pembelian toko, penjualan langsung, kalkulasi pengiriman malam hari, dan pengganda kualitas (*quality multiplier*).
 - `inventory.test.ts`: Kapasitas 24 slot, penumpukan item (*stacking*), pemisahan kualitas, swap slot, dan seleksi hotbar.
@@ -145,6 +175,7 @@ npm test
 - `quests.test.ts`: Pelacakan target misi dinamis dan klaim hadiah anti-duplikasi.
 - `animals_and_cooking.test.ts`: Inisialisasi hewan peternakan, interaksi kasih sayang (+persahabatan), pengumpulan telur & susu, pengecekan bahan resep, dan memasak hidangan.
 - `voice_and_multiplayer.test.ts`: Profil suara unik dan formant tone untuk 7 NPC, pemilihan catchphrase sesuai waktu, toggle voice AI, dan inisialisasi state multiplayer client.
+- `pathfinding_and_mechanics.test.ts`: Validasi algoritma A* grid pathfinder, pencarian spiral neighbor saat titik target terhalang, pelacakan rute NPC, penambangan 4 jenis batuan ore/gem, pemulihan energi pemandian air panas (+3/s), dan alur 8 tahap tutorial pemula.
 - `save.test.ts`: Penyimpanan 3 slot lokal dan export/import JSON.
 
 ---
@@ -163,25 +194,57 @@ cozyhaven/
 │   ├── App.tsx                     # Harness integrasi Phaser 3 + React HUD
 │   ├── index.css                   # Custom style Tailwind & pixel-art rendering
 │   ├── types/                      # Type definitions & data catalog
-│   │   ├── items.ts                # Katalog 30+ perkakas, bibit, hasil panen, material, furnitur
+│   │   ├── items.ts                # Katalog 30+ perkakas, bibit, hasil panen, material, permata, furnitur
 │   │   ├── crops.ts                # Definisi tanaman, musim, regrow, dan tahap tumbuh
-│   │   ├── npcs.ts                 # Profil 7 NPC, jadwal jam harian, dialog & hadiah favorit
+│   │   ├── npcs.ts                 # Profil 7 NPC, jadwal jam harian, dialog, waypoint rute, & hadiah
 │   │   ├── quests.ts               # Definisi quest utama & harian
 │   │   ├── furniture.ts            # Tipe penataan furnitur grid & rotasi
-│   │   └── game.ts                 # Schema penyimpanan save game, waktu, dan cuaca
+│   │   └── game.ts                 # Schema penyimpanan save game, 5 zona map, dan status tutorial
 │   ├── domain/                     # Business Logic Layer (Decoupled dari UI)
-│   │   ├── GameState.ts            # State manager sentral, farming logic, economy, save/load
+│   │   ├── GameState.ts            # State manager sentral, farming, mining, energy, tutorial, save/load
 │   │   ├── EventBus.ts             # Typed event emitter untuk komunikasi Phaser <-> React
-│   │   └── SoundSynth.ts           # Synthesizer Web Audio API untuk BGM & efek suara (SFX)
+│   │   ├── SoundSynth.ts           # Synthesizer Web Audio API untuk BGM & SFX (mining, hot spring)
+│   │   └── VoiceAI.ts              # Synthesizer suara AI dan formant tone untuk 7 warga desa
 │   ├── game/                       # Phaser 3 Game Engine Layer
 │   │   ├── CozyHavenGame.ts        # Konfigurasi Phaser Game instance
+│   │   ├── ai/
+│   │   │   └── Pathfinder.ts       # Algoritma A* grid pathfinding & obstacle query
 │   │   ├── assets/
-│   │   │   └── ProceduralTextures.ts # Generator tekstur pixel art kanvas 100% original
+│   │   │   └── ProceduralTextures.ts # Generator tekstur pixel art kanvas 5 zona & ore nodes
 │   │   └── scenes/
-│   │       ├── BootScene.ts        # Scene inisialisasi tekstur & animasi karakter
-│   │       ├── WorldScene.ts       # Scene peta luar ruangan (Farm & Village)
+│   │       ├── BootScene.ts        # Scene inisialisasi tekstur & animasi karakter 4 arah
+│   │       ├── WorldScene.ts       # Scene 5 zona luar ruangan (Farm, Village, Beach, Forest, Mine)
 │   │       └── HouseScene.ts       # Scene interior rumah & mode penataan dekorasi
+│   ├── network/
+│   │   └── MultiplayerClient.ts    # Sinkronisasi posisi multi-zone, emote chat, & aksi tambang
 │   ├── ui/                         # React HUD & Dialog Overlays
+│   │   ├── HUD.tsx                 # Status bar atas: Jam, Musim, Energi, Koin, Menu, & Tutorial Card
+│   │   ├── Hotbar.tsx              # Quick hotbar 9 slot bawah dengan seleksi numerik
+│   │   ├── InteractionPrompt.tsx   # Tooltip prompt interaksi mengambang
+│   │   ├── VirtualControls.tsx     # Virtual D-Pad & Tombol aksi untuk perangkat mobile
+│   │   └── modals/                 # Dialog modal jendela game
+│   │       ├── InventoryModal.tsx  # Tas ransel, inspeksi item, sortir, makan
+│   │       ├── ShopModal.tsx       # Toko serba ada Maple (Beli & Jual)
+│   │       ├── ShippingBinModal.tsx# Kotak kirim hasil panen semalam
+│   │       ├── DialogueModal.tsx   # Dialog NPC bercabang, voice playback & menu hadiah
+│   │       ├── QuestModal.tsx      # Jurnal pelacakan misi & klaim hadiah
+│   │       ├── MuseumModal.tsx     # Indeks donasi museum akuarium, serangga, botani
+│   │       ├── MapModal.tsx        # Peta 5 zona pulau interaktif & pelacak real-time NPC
+│   │       ├── CalendarModal.tsx   # Kalender 28 hari dan jadwal ulang tahun warga
+│   │       ├── FishingModal.tsx    # Minigame memancing reel & hook
+│   │       ├── SettingsModal.tsx   # Pengaturan volume audio, save slots, export/import JSON
+│   │       ├── SleepConfirmModal.tsx # Konfirmasi tidur di tempat tidur
+│   │       └── ShippingReportModal.tsx # Laporan penghasilan koin pagi hari
+│   └── __tests__/                  # Automated Unit Test Suites (Vitest)
+│       ├── farming.test.ts
+│       ├── economy.test.ts
+│       ├── inventory.test.ts
+│       ├── npc.test.ts
+│       ├── quests.test.ts
+│       ├── animals_and_cooking.test.ts
+│       ├── voice_and_multiplayer.test.ts
+│       ├── pathfinding_and_mechanics.test.ts
+│       └── save.test.ts
 │   │   ├── HUD.tsx                 # Status bar atas: Jam, Musim, Cuaca, Energi, Koin, Menu
 │   │   ├── Hotbar.tsx              # Quick hotbar 9 slot bawah dengan seleksi numerik
 │   │   ├── InteractionPrompt.tsx   # Tooltip prompt interaksi mengambang
